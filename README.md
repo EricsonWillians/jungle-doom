@@ -1,104 +1,53 @@
-# Chocolate Doom
+# Jungle-Doom
 
-Chocolate Doom aims to accurately reproduce the original DOS version of
-Doom and other games based on the Doom engine in a form that can be
-run on modern computers.
+**Jungle-Doom** aims to revolutionize Doom modding by integrating Python scripting capabilities into an accurate reproduction of the original DOS version of Doom and other games based on the Doom engine. Designed for modern computers, Jungle-Doom empowers modders with the flexibility and simplicity of Python, eliminating the complexities of traditional scripting languages like ZSCRIPT and DECORATE.
 
-Originally, Chocolate Doom was only a Doom source port. The project
-now includes ports of Heretic and Hexen, and Strife.
+Originally, Jungle-Doom was a fork of Chocolate Doom. The project now includes ports of Heretic, Hexen, and Strife, enhanced with robust Python scripting support.
 
-Chocolate Doom’s aims are:
+## Jungle-Doom’s Aims
 
- * To always be 100% Free and Open Source software.
- * Portability to as many different operating systems as possible.
- * Accurate reproduction of the original DOS versions of the games,
-   including bugs.
- * Compatibility with the DOS demo, configuration and savegame files.
- * To provide an accurate retro “feel” (display and input should
-   behave the same).
+- **100% Free and Open Source:** Jungle-Doom remains committed to being free and open source software under the GNU GPL.
+- **Cross-Platform Portability:** Ensuring compatibility across a wide range of operating systems, including Windows, macOS, and Linux.
+- **Accurate Emulation:** Faithfully reproducing the original DOS versions of Doom and related games, including all original bugs for authenticity.
+- **Python Scripting Integration:** Providing seamless Python scripting capabilities to make modding more accessible and powerful for modern audiences.
+- **Compatibility:** Maintaining compatibility with DOS demo, configuration, and savegame files.
+- **Retro Experience:** Delivering an authentic retro feel with display and input behaviors mirroring the original experience.
 
-More information about the philosophy and design behind Chocolate Doom
-can be found in the PHILOSOPHY file distributed with the source code.
+More information about the philosophy and design behind Jungle-Doom can be found in the **PHILOSOPHY** file distributed with the source code.
 
-## Setting up gameplay
+## Setting Up Gameplay
 
-For instructions on how to set up Chocolate Doom for play, see the
-INSTALL file.
+For instructions on how to set up Jungle-Doom for play, see the [INSTALL](INSTALL) file.
 
 ## Configuration File
 
-Chocolate Doom is compatible with the DOS Doom configuration file
-(normally named `default.cfg`). Existing configuration files for DOS
-Doom should therefore simply work out of the box. However, Chocolate
-Doom also provides some extra settings. These are stored in a
-separate file named `chocolate-doom.cfg`.
+Jungle-Doom is compatible with the DOS Doom configuration file (normally named `default.cfg`). Existing configuration files for DOS Doom should therefore simply work out of the box. Additionally, Jungle-Doom provides extended settings to leverage Python scripting capabilities. These are stored in a separate file named `jungle-doom.cfg`.
 
-The configuration can be edited using the chocolate-setup tool.
+The configuration can be edited using the `jungle-setup` tool, which includes options for managing Python scripts and integrating custom mods.
 
-## Command line options
+## Python Scripting
 
-Chocolate Doom supports a number of command line parameters, including
-some extras that were not originally suported by the DOS versions. For
-binary distributions, see the CMDLINE file included with your
-download; more information is also available on the Chocolate Doom
-website.
+Jungle-Doom introduces Python scripting as a core feature, enabling ultimate modding flexibility. Modders can write Python scripts to customize game behavior, create new game modes, and enhance gameplay without delving into complex scripting languages.
 
-## Playing TCs
+### Getting Started with Python Scripting
 
-With Vanilla Doom there is no way to include sprites in PWAD files.
-Chocolate Doom’s ‘-file’ command line option behaves exactly the same
-as Vanilla Doom, and trying to play TCs by adding the WAD files using
-‘-file’ will not work.
+1. **Script Directory:** Place your Python scripts in the `scripts/` directory within the Jungle-Doom installation folder.
+2. **Script Examples:** Jungle-Doom includes sample scripts in the `scripts/examples/` folder to help you get started.
+3. **API Documentation:** Comprehensive Python API documentation is available to guide you in creating advanced mods.
 
-Many Total Conversions (TCs) are distributed as a PWAD file which must
-be merged into the main IWAD. Typically a copy of DEUSF.EXE is
-included which performs this merge. Chocolate Doom includes a new
-option, ‘-merge’, which will simulate this merge. Essentially, the
-WAD directory is merged in memory, removing the need to modify the
-IWAD on disk.
+### Running Python Scripts
 
-To play TCs using Chocolate Doom, run like this:
+Python scripts are automatically loaded and executed by Jungle-Doom during game initialization. To add or remove scripts, modify the `jungle-doom.cfg` file or use the `jungle-setup` tool.
 
-```
-chocolate-doom -merge thetc.wad
-```
+### Example Usage
 
-Here are some examples:
+```python
+# scripts/my_mod.py
 
-```
-chocolate-doom -merge batman.wad -deh batman.deh vbatman.deh  (Batman Doom)
-chocolate-doom -merge aoddoom1.wad -deh aoddoom1.deh  (Army of Darkness Doom)
-```
+import jungledoom
 
-## Other information
+def on_player_move(player):
+    print(f"Player {player.name} moved to position: {player.position}")
 
- * Chocolate Doom includes a number of different options for music
-   playback. See the README.Music file for more details.
-
- * More information, including information about how to play various
-   classic TCs, is available on the Chocolate Doom website:
-
-     https://www.chocolate-doom.org/
-
-   You are encouraged to sign up and contribute any useful information
-   you may have regarding the port!
-
- * Chocolate Doom is not perfect. Although it aims to accurately
-   emulate and reproduce the DOS executables, some behavior can be very
-   difficult to reproduce. Because of the nature of the project, you
-   may also encounter Vanilla Doom bugs; these are intentionally
-   present; see the NOT-BUGS file for more information.
-
-   New bug reports can be submitted to the issue tracker on Github:
-
-     https://github.com/chocolate-doom/chocolate-doom/issues
-
- * Source code patches are welcome, but please follow the style
-   guidelines - see the file named HACKING included with the source
-   distribution.
-
- * Chocolate Doom is distributed under the GNU GPL. See the COPYING
-   file for more information.
-
- * Please send any feedback, questions or suggestions to
-   chocolate-doom-dev-list@chocolate-doom.org. Thanks!
+# Hook the function to the player's move event
+jungledoom.events.on_player_move += on_player_move
