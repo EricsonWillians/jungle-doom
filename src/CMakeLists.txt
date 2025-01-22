@@ -1,9 +1,17 @@
+###############################################################################
+# Minimal Python integration into the *original* Chocolate Doom src/CMakeLists.txt
+###############################################################################
+
+## PYTHON ADDITION (begin)
+find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+include_directories(${Python3_INCLUDE_DIRS})
+## PYTHON ADDITION (end)
+
 foreach(SUBDIR doom heretic hexen strife setup)
     add_subdirectory("${SUBDIR}")
 endforeach()
 
 # Common source files used by absolutely everything:
-
 set(COMMON_SOURCE_FILES
     i_main.c
     i_system.c           i_system.h
@@ -11,7 +19,6 @@ set(COMMON_SOURCE_FILES
     m_misc.c             m_misc.h)
 
 # Dedicated server (chocolate-server):
-
 set(DEDSERV_FILES
     d_dedicated.c
     d_iwad.c            d_iwad.h
@@ -58,7 +65,6 @@ set_target_properties("${PROGRAM_PREFIX}server" PROPERTIES COMPILE_FLAGS "${SDL_
 set_target_properties("${PROGRAM_PREFIX}server" PROPERTIES LINK_FLAGS "${SDL_FLAGS}")
 
 # Source files used by the game binaries (chocolate-doom, etc.)
-
 set(GAME_SOURCE_FILES
     aes_prng.c          aes_prng.h
     d_event.c           d_event.h
@@ -87,6 +93,12 @@ set(GAME_SOURCE_FILES
     i_video.c           i_video.h
     i_videohr.c         i_videohr.h
     i_winmusic.c
+
+    ## PYTHON ADDITION (begin)
+    # Add your Python subsystem here
+    i_python.c          i_python.h
+    ## PYTHON ADDITION (end)
+
     midifallback.c      midifallback.h
     midifile.c          midifile.h
     mus2mid.c           mus2mid.h
@@ -122,7 +134,8 @@ set(GAME_SOURCE_FILES
     w_file_posix.c
     w_file_win32.c
     w_merge.c           w_merge.h
-    z_zone.c            z_zone.h)
+    z_zone.c            z_zone.h
+)
 
 set(GAME_INCLUDE_DIRS "${CMAKE_CURRENT_BINARY_DIR}/../")
 
@@ -157,8 +170,13 @@ if(FluidSynth_FOUND)
     list(APPEND EXTRA_LIBS FluidSynth::libfluidsynth)
 endif()
 if(WIN32)
-	list(APPEND EXTRA_LIBS winmm shlwapi)
+    list(APPEND EXTRA_LIBS winmm shlwapi)
 endif()
+
+## PYTHON ADDITION (begin)
+# Link the standard Python library so i_python.c can resolve Py_Initialize, etc.
+list(APPEND EXTRA_LIBS Python3::Python)
+## PYTHON ADDITION (end)
 
 if(WIN32)
     add_executable("${PROGRAM_PREFIX}doom" WIN32 ${SOURCE_FILES_WITH_DEH} "${CMAKE_CURRENT_BINARY_DIR}/doom-res.rc")
@@ -171,8 +189,7 @@ target_link_libraries("${PROGRAM_PREFIX}doom" doom ${EXTRA_LIBS})
 set_target_properties("${PROGRAM_PREFIX}doom" PROPERTIES COMPILE_FLAGS "${SDL_FLAGS}")
 
 if(MSVC)
-    set_target_properties("${PROGRAM_PREFIX}doom" PROPERTIES
-                          LINK_FLAGS "/MANIFEST:NO")
+    set_target_properties("${PROGRAM_PREFIX}doom" PROPERTIES LINK_FLAGS "/MANIFEST:NO")
 endif()
 
 if(WIN32)
@@ -186,8 +203,7 @@ target_link_libraries("${PROGRAM_PREFIX}heretic" heretic ${EXTRA_LIBS})
 set_target_properties("${PROGRAM_PREFIX}heretic" PROPERTIES COMPILE_FLAGS "${SDL_FLAGS}")
 
 if(MSVC)
-    set_target_properties("${PROGRAM_PREFIX}heretic" PROPERTIES
-                          LINK_FLAGS "/MANIFEST:NO")
+    set_target_properties("${PROGRAM_PREFIX}heretic" PROPERTIES LINK_FLAGS "/MANIFEST:NO")
 endif()
 
 if(WIN32)
@@ -201,8 +217,7 @@ target_link_libraries("${PROGRAM_PREFIX}hexen" hexen ${EXTRA_LIBS})
 set_target_properties("${PROGRAM_PREFIX}hexen" PROPERTIES COMPILE_FLAGS "${SDL_FLAGS}")
 
 if(MSVC)
-    set_target_properties("${PROGRAM_PREFIX}hexen" PROPERTIES
-                          LINK_FLAGS "/MANIFEST:NO")
+    set_target_properties("${PROGRAM_PREFIX}hexen" PROPERTIES LINK_FLAGS "/MANIFEST:NO")
 endif()
 
 if(WIN32)
@@ -216,8 +231,7 @@ target_link_libraries("${PROGRAM_PREFIX}strife" strife ${EXTRA_LIBS})
 set_target_properties("${PROGRAM_PREFIX}strife" PROPERTIES COMPILE_FLAGS "${SDL_FLAGS}")
 
 if(MSVC)
-    set_target_properties("${PROGRAM_PREFIX}strife" PROPERTIES
-                          LINK_FLAGS "/MANIFEST:NO")
+    set_target_properties("${PROGRAM_PREFIX}strife" PROPERTIES LINK_FLAGS "/MANIFEST:NO")
 endif()
 
 # Source files needed for chocolate-setup:
