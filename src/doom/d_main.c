@@ -77,6 +77,10 @@
 
 #include "doom_icon.c"
 
+// Python integration subsystem
+
+#include "i_python.h"
+
 //
 // D-DoomLoop()
 // Not a globally visible function,
@@ -1301,6 +1305,13 @@ void D_DoomMain (void)
 
     DEH_printf("Z_Init: Init zone memory allocation daemon. \n");
     Z_Init ();
+
+    //
+    // [PYTHON] Initialize Python early enough that scripts
+    // can hook into various subsystems if needed.
+    //
+    DEH_printf("I_InitPython: Initializing embedded Python.\n");
+    I_InitPython();
 
     //!
     // @category net
